@@ -7,11 +7,11 @@ from src.preprocess import scale_data
 from prometheus_client import start_http_server, Gauge
 import joblib
 import time
+import os
 
 accuracy_metric = Gauge('model_accuracy', 'Model accuracy')
 
 def train_model():
-    # load dataset from sklearn
     X, y = load_iris(return_X_y=True)
 
     X_train, X_test, y_train, y_test = train_test_split(
@@ -39,5 +39,7 @@ if __name__ == "__main__":
 
     print("Accuracy:", acc)
 
-    while True:
-        time.sleep(5)
+    # ✅ run infinite loop only in local, not in CI
+    if os.getenv("CI") != "true":
+        while True:
+            time.sleep(5)
